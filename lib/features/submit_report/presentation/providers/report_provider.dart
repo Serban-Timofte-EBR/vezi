@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/report.dart';
 import '../../domain/usecases/submit_report_usecase.dart';
@@ -18,10 +20,25 @@ class SubmitReportController extends StateNotifier<AsyncValue<void>> {
 
   SubmitReportController(this.usecase) : super(const AsyncValue.data(null));
 
-  Future<void> submit(String title, String description) async {
+  Future<void> submit({
+    required String title,
+    required String description,
+    required double latitude,
+    required double longitude,
+    List<File>? images,
+  }) async {
     state = const AsyncValue.loading();
     try {
-      await usecase.execute(Report(title: title, description: description));
+      final report = Report(
+        title: title,
+        description: description,
+        latitude: latitude,
+        longitude: longitude,
+        createdAt: DateTime.now(),
+        images: images,
+      );
+
+      await usecase.execute(report);
       state = const AsyncValue.data(null);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
