@@ -8,8 +8,8 @@ class EmailReportRepository implements IReportRepository {
   Future<void> submitReport(Report report) async {
     final url = Uri.parse('http://10.0.2.2:3000/reports');
 
-    const username = 'admin';
-    const password = 'secret';
+    const username = 'veziAdmin';
+    const password = 'Mareparolagrea1234!';
     final basicAuth =
         'Basic ${base64Encode(utf8.encode('$username:$password'))}';
 

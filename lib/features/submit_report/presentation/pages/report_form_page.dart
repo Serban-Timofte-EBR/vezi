@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:app_settings/app_settings.dart';
 import '../providers/report_provider.dart';
 
 class ReportFormPage extends ConsumerStatefulWidget {
@@ -17,9 +18,6 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descController = TextEditingController();
-
-  double? _latitude;
-  double? _longitude;
   final List<File> _selectedImages = [];
 
   Future<void> _getCurrentLocation() async {
@@ -28,7 +26,7 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Userul a refuzat, arată mesaj prietenos
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Ai refuzat permisiunea de locație')),
         );
@@ -37,10 +35,15 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
     }
 
     if (permission == LocationPermission.deniedForever) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
+        SnackBar(
+          content: const Text(
             'Permisiunea locației a fost blocată permanent. Te rog activeaz-o din Settings!',
+          ),
+          action: SnackBarAction(
+            label: 'Deschide',
+            onPressed: () => AppSettings.openAppSettings(),
           ),
         ),
       );
@@ -75,6 +78,7 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(submitReportControllerProvider);
+    final location = ref.watch(locationProvider);
 
     ref.listen(submitReportControllerProvider, (previous, next) {
       if (next.hasError) {
@@ -88,9 +92,11 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
         ).showSnackBar(const SnackBar(content: Text('Sesizare trimisă!')));
         _titleController.clear();
         _descController.clear();
+        ref.read(locationProvider.notifier).state = (
+          latitude: null,
+          longitude: null,
+        );
         setState(() {
-          _latitude = null;
-          _longitude = null;
           _selectedImages.clear();
         });
       }
@@ -133,8 +139,8 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
                   child: const Text('Folosește Locația Curentă'),
                 ),
                 Text(
-                  _latitude != null && _longitude != null
-                      ? 'Locație: ($_latitude, $_longitude)'
+                  location.latitude != null && location.longitude != null
+                      ? 'Locație: (${location.latitude}, ${location.longitude})'
                       : 'Locație neconfigurată',
                 ),
                 const SizedBox(height: 16),
@@ -178,7 +184,8 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
                         ? null
                         : () {
                             if (_formKey.currentState!.validate()) {
-                              if (_latitude == null || _longitude == null) {
+                              if (location.latitude == null ||
+                                  location.longitude == null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text('Te rog setează locația!'),
@@ -191,8 +198,8 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
                                   .submit(
                                     title: _titleController.text.trim(),
                                     description: _descController.text.trim(),
-                                    latitude: _latitude!,
-                                    longitude: _longitude!,
+                                    latitude: location.latitude!,
+                                    longitude: location.longitude!,
                                     images: _selectedImages.isNotEmpty
                                         ? _selectedImages
                                         : null,
