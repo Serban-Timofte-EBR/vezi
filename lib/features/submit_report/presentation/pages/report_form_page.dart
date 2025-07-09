@@ -23,11 +23,36 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
   final List<File> _selectedImages = [];
 
   Future<void> _getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Userul a refuzat, arată mesaj prietenos
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Ai refuzat permisiunea de locație')),
+        );
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Permisiunea locației a fost blocată permanent. Te rog activeaz-o din Settings!',
+          ),
+        ),
+      );
+      return;
+    }
+
     final position = await Geolocator.getCurrentPosition();
-    setState(() {
-      _latitude = position.latitude;
-      _longitude = position.longitude;
-    });
+
+    ref.read(locationProvider.notifier).state = (
+      latitude: position.latitude,
+      longitude: position.longitude,
+    );
   }
 
   Future<void> _pickImage() async {

@@ -15,6 +15,12 @@ final submitReportControllerProvider =
       return SubmitReportController(usecase);
     });
 
+final locationProvider = StateProvider<({double? latitude, double? longitude})>(
+  (ref) {
+    return (latitude: null, longitude: null);
+  },
+);
+
 class SubmitReportController extends StateNotifier<AsyncValue<void>> {
   final SubmitReportUsecase usecase;
 
