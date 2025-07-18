@@ -136,38 +136,46 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
                     ? 'Completează descrierea'
                     : null,
               ),
+              const SizedBox(height: 16),
               SizedBox(
-                height: 200,
+                height: 250,
                 child: _latitude != null && _longitude != null
                     ? GoogleMap(
                         initialCameraPosition: CameraPosition(
                           target: LatLng(_latitude!, _longitude!),
                           zoom: 16,
                         ),
+                        onTap: (LatLng newPos) {
+                          setState(() {
+                            _latitude = newPos.latitude;
+                            _longitude = newPos.longitude;
+                          });
+                        },
                         markers: {
                           Marker(
-                            markerId: const MarkerId('current_location'),
+                            markerId: const MarkerId('selected_location'),
                             position: LatLng(_latitude!, _longitude!),
+                            draggable: true,
+                            onDragEnd: (LatLng newPos) {
+                              setState(() {
+                                _latitude = newPos.latitude;
+                                _longitude = newPos.longitude;
+                              });
+                            },
                           ),
                         },
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: true,
                         zoomControlsEnabled: false,
-                        myLocationButtonEnabled: false,
                       )
-                    : const Center(child: Text('Locația nu este disponibilă')),
+                    : const Center(child: CircularProgressIndicator()),
               ),
+              const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: _getCurrentLocation,
                 icon: const Icon(Icons.my_location),
-                label: const Text('Folosește locația'),
+                label: const Text('Actualizează locația curentă'),
               ),
-              if (_latitude != null && _longitude != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(
-                    'Locație: ($_latitude, $_longitude)',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
               const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: _pickImage,
