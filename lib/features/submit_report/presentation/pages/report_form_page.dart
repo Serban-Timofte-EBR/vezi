@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import '../providers/report_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ReportFormPage extends ConsumerStatefulWidget {
   const ReportFormPage({super.key});
@@ -95,7 +96,17 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Trimite Sesizare')),
+      appBar: AppBar(
+        title: const Text('Trimite Sesizare'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+            },
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Form(

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "309128907993",
+    "project_id": "veziapp-1a9fc",
+    "storage_bucket": "veziapp-1a9fc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:309128907993:android:3d87d3fa4c773f98c282c8",
+        "android_client_info": {
+          "package_name": "com.example.vezi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRZeIgt9VN80tvx5zhlcWOGiMPp16CIck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
