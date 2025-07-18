@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import '../providers/report_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ReportFormPage extends ConsumerStatefulWidget {
   const ReportFormPage({super.key});
@@ -21,6 +22,12 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
 
   double? _latitude;
   double? _longitude;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
 
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
@@ -129,7 +136,25 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
                     ? 'Completează descrierea'
                     : null,
               ),
-              const SizedBox(height: 16),
+              SizedBox(
+                height: 200,
+                child: _latitude != null && _longitude != null
+                    ? GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(_latitude!, _longitude!),
+                          zoom: 16,
+                        ),
+                        markers: {
+                          Marker(
+                            markerId: const MarkerId('current_location'),
+                            position: LatLng(_latitude!, _longitude!),
+                          ),
+                        },
+                        zoomControlsEnabled: false,
+                        myLocationButtonEnabled: false,
+                      )
+                    : const Center(child: Text('Locația nu este disponibilă')),
+              ),
               ElevatedButton.icon(
                 onPressed: _getCurrentLocation,
                 icon: const Icon(Icons.my_location),
