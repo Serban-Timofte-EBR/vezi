@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vezi/core/theme/app_theme.dart';
 import 'features/submit_report/presentation/pages/report_form_page.dart';
 
 void main() {
@@ -12,9 +13,10 @@ class CivicAlertApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Civic Alert',
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue),
-      home: ReportFormPage(),
+      title: 'Vezi Civic Alert',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      home: const ReportFormPage(),
     );
   }
 }
