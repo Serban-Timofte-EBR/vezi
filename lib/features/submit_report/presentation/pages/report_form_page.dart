@@ -6,6 +6,8 @@ import 'package:geolocator/geolocator.dart';
 import '../providers/report_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/foundation.dart' show Factory;
+import 'package:flutter/gestures.dart';
 
 class ReportFormPage extends ConsumerStatefulWidget {
   const ReportFormPage({super.key});
@@ -66,9 +68,9 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
       source: ImageSource.gallery,
     );
     if (pickedFile != null) {
-      if (_selectedImages.length >= 5) {
+      if (_selectedImages.length >= 3) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Poți adăuga maxim 5 poze!')),
+          const SnackBar(content: Text('Poți adăuga maxim 3 poze!')),
         );
         return;
       }
@@ -76,6 +78,24 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
         _selectedImages.add(File(pickedFile.path));
       });
     }
+  }
+
+  Set<Marker> _buildMarker() {
+    if (_latitude == null || _longitude == null) return {};
+
+    return {
+      Marker(
+        markerId: const MarkerId('selected_location'),
+        position: LatLng(_latitude!, _longitude!),
+        draggable: true,
+        onDragEnd: (LatLng newPos) {
+          setState(() {
+            _latitude = newPos.latitude;
+            _longitude = newPos.longitude;
+          });
+        },
+      ),
+    };
   }
 
   @override
@@ -151,30 +171,18 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
                             _longitude = newPos.longitude;
                           });
                         },
-                        markers: {
-                          Marker(
-                            markerId: const MarkerId('selected_location'),
-                            position: LatLng(_latitude!, _longitude!),
-                            draggable: true,
-                            onDragEnd: (LatLng newPos) {
-                              setState(() {
-                                _latitude = newPos.latitude;
-                                _longitude = newPos.longitude;
-                              });
-                            },
-                          ),
-                        },
+                        markers: _buildMarker(),
                         myLocationEnabled: true,
                         myLocationButtonEnabled: true,
-                        zoomControlsEnabled: false,
+                        zoomControlsEnabled: true,
+                        gestureRecognizers:
+                            <Factory<OneSequenceGestureRecognizer>>{
+                              Factory<OneSequenceGestureRecognizer>(
+                                () => EagerGestureRecognizer(),
+                              ),
+                            },
                       )
                     : const Center(child: CircularProgressIndicator()),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: _getCurrentLocation,
-                icon: const Icon(Icons.my_location),
-                label: const Text('Actualizează locația curentă'),
               ),
               const SizedBox(height: 16),
               ElevatedButton.icon(

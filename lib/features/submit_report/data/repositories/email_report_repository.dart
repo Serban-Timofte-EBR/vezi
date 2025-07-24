@@ -21,6 +21,7 @@ class EmailReportRepository implements IReportRepository {
         'description': report.description,
         'latitude': report.latitude,
         'longitude': report.longitude,
+        'type': 'citizen',
       }),
     );
 
