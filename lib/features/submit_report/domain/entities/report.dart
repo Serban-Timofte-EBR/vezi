@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'category.dart';
 
 class Report {
   final String title;
@@ -7,6 +8,7 @@ class Report {
   final double longitude;
   final DateTime createdAt;
   final List<File>? images;
+  final Category? category;
 
   Report({
     required this.title,
@@ -15,5 +17,6 @@ class Report {
     required this.longitude,
     required this.createdAt,
     this.images,
+    this.category,
   });
 }

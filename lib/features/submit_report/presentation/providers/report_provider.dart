@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/report.dart';
+import '../../domain/entities/category.dart';
 import '../../domain/usecases/submit_report_usecase.dart';
 import '../../data/repositories/email_report_repository.dart';
 
@@ -32,6 +33,7 @@ class SubmitReportController extends StateNotifier<AsyncValue<void>> {
     required double latitude,
     required double longitude,
     List<File>? images,
+    Category? category,
   }) async {
     state = const AsyncValue.loading();
     try {
@@ -42,6 +44,7 @@ class SubmitReportController extends StateNotifier<AsyncValue<void>> {
         longitude: longitude,
         createdAt: DateTime.now(),
         images: images,
+        category: category,
       );
 
       await usecase.execute(report);

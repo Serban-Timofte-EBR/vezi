@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import '../providers/report_provider.dart';
+import '../../domain/entities/category.dart';
+import 'package:vezi/features/submit_report/presentation/providers/category_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/foundation.dart' show Factory;
@@ -21,6 +23,7 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
   final _titleController = TextEditingController();
   final _descController = TextEditingController();
   final List<File> _selectedImages = [];
+  Category? _selectedCategory;
 
   double? _latitude;
   double? _longitude;
@@ -118,6 +121,7 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
           _latitude = null;
           _longitude = null;
           _selectedImages.clear();
+          _selectedCategory = null;
         });
       }
     });
@@ -156,6 +160,38 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
                     ? 'Completează descrierea'
                     : null,
               ),
+              const SizedBox(height: 16),
+              ref
+                  .watch(categoryListProvider)
+                  .when(
+                    data: (categories) {
+                      return DropdownButtonFormField<Category>(
+                        value: _selectedCategory,
+                        decoration: const InputDecoration(
+                          labelText: 'Selectează categoria',
+                        ),
+                        items: categories.map((category) {
+                          return DropdownMenuItem<Category>(
+                            value: category,
+                            child: Text(category.name),
+                          );
+                        }).toList(),
+                        onChanged: (Category? selected) {
+                          setState(() {
+                            _selectedCategory = selected;
+                          });
+                        },
+                        validator: (value) =>
+                            value == null ? 'Selectează o categorie' : null,
+                      );
+                    },
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, _) {
+                      print('EROARE la categorie: $error');
+                      return Text('Eroare la încărcarea categoriilor: $error');
+                    },
+                  ),
               const SizedBox(height: 16),
               SizedBox(
                 height: 250,
@@ -236,6 +272,7 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
                                   images: _selectedImages.isNotEmpty
                                       ? _selectedImages
                                       : null,
+                                  category: _selectedCategory,
                                 );
                           }
                         },
