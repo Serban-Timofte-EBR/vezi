@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vezi/features/auth/services/auth_service.dart';
 import 'package:vezi/features/auth/presentation/register_page.dart';
-import 'package:vezi/features/submit_report/presentation/pages/report_form_page.dart';
+import 'package:vezi/features/launcher/presentation/launcher_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -82,14 +82,6 @@ class _LoginPageState extends State<LoginPage> {
                               _emailCtrl.text.trim(),
                               _passwordCtrl.text.trim(),
                             );
-                            if (context.mounted) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const ReportFormPage(),
-                                ),
-                              );
-                            }
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Eroare: $e')),
