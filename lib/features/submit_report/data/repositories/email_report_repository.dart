@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:vezi/features/submit_report/domain/entities/report.dart';
 import 'package:vezi/features/submit_report/domain/repositories/report_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class EmailReportRepository implements IReportRepository {
   @override
@@ -13,6 +14,11 @@ class EmailReportRepository implements IReportRepository {
     final basicAuth =
         'Basic ${base64Encode(utf8.encode('$username:$password'))}';
 
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('User is not authenticated');
+    }
+
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json', 'Authorization': basicAuth},
@@ -22,6 +28,10 @@ class EmailReportRepository implements IReportRepository {
         'latitude': report.latitude,
         'longitude': report.longitude,
         'type': 'citizen',
+        'userId': user.uid,
+        'userEmail': user.email,
+        'category': report.category?.id,
+        'images': [], // momentan lista goală, va fi completată mai târziu
       }),
     );
 
