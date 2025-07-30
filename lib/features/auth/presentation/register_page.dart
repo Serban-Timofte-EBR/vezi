@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vezi/features/auth/services/auth_service.dart';
 import 'package:vezi/features/launcher/presentation/launcher_page.dart';
-import 'package:vezi/features/auth/presentation/phone_auth_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
