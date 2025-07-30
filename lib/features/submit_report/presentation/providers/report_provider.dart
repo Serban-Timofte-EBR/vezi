@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/report.dart';
 import '../../domain/entities/category.dart';
@@ -37,7 +38,13 @@ class SubmitReportController extends StateNotifier<AsyncValue<void>> {
   }) async {
     state = const AsyncValue.loading();
     try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw Exception('User not authenticated');
+      }
+
       final report = Report(
+        id: '',
         title: title,
         description: description,
         latitude: latitude,
@@ -45,6 +52,8 @@ class SubmitReportController extends StateNotifier<AsyncValue<void>> {
         createdAt: DateTime.now(),
         images: images,
         category: category,
+        userId: user.uid,
+        userEmail: user.email!,
       );
 
       await usecase.execute(report);

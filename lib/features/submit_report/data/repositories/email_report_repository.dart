@@ -31,7 +31,7 @@ class EmailReportRepository implements IReportRepository {
         'userId': user.uid,
         'userEmail': user.email,
         'category': report.category?.id,
-        'images': [], // momentan lista goală, va fi completată mai târziu
+        'images': [],
       }),
     );
 

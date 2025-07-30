@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vezi/features/submit_report/presentation/pages/report_form_page.dart';
+import 'package:vezi/features/submit_report/presentation/pages/user_reports_page.dart';
 
 class LauncherPage extends StatelessWidget {
   const LauncherPage({super.key});
@@ -50,9 +51,11 @@ class LauncherPage extends StatelessWidget {
                       label: "Istoric sesizări",
                       color: Colors.indigo,
                       onTap: () {
-                        // TODO: Navighează la pagina istoric
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Coming soon...')),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const UserReportsPage(),
+                          ),
                         );
                       },
                     ),
