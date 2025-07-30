@@ -109,7 +109,54 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(height: 16),
-
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.grey),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    backgroundColor: Colors.white,
+                    elevation: 2,
+                  ),
+                  onPressed: _isLoading
+                      ? null
+                      : () async {
+                          setState(() => _isLoading = true);
+                          try {
+                            final user = await _auth.signInWithGoogle();
+                            if (user != null && mounted) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const LauncherPage(),
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Eroare Google: $e')),
+                            );
+                          } finally {
+                            setState(() => _isLoading = false);
+                          }
+                        },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('assets/google_logo.png', height: 24),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'Continuă cu Google',
+                        style: TextStyle(fontSize: 16, color: Colors.black87),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
               TextButton(
                 onPressed: () => Navigator.push(
                   context,

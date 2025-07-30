@@ -43,6 +43,7 @@ dependencies:
   firebase_auth: ^4.17.3
   firebase_core: ^2.30.0
   google_maps_flutter: ^2.6.0
+  google_sign_in: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -95,3 +96,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  assets:
+    - assets/google_logo.png

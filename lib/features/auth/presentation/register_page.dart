@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vezi/features/auth/services/auth_service.dart';
-import 'package:vezi/features/submit_report/presentation/pages/report_form_page.dart';
+import 'package:vezi/features/launcher/presentation/launcher_page.dart';
+import 'package:vezi/features/auth/presentation/phone_auth_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -28,7 +29,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const ReportFormPage()),
+          MaterialPageRoute(builder: (_) => const LauncherPage()),
         );
       }
     } catch (e) {
@@ -40,29 +41,90 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  Widget _outlinedGoogleButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        icon: Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: Image.asset('assets/google_logo.png', height: 24),
+        ),
+        label: const Text(
+          "Continuă cu Google",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: Colors.black87,
+          side: const BorderSide(color: Colors.grey),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+        ),
+        onPressed: () async {
+          setState(() => _loading = true);
+          try {
+            final user = await _auth.signInWithGoogle();
+            if (user != null && mounted) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const LauncherPage()),
+              );
+            }
+          } catch (e) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("Eroare Google: $e")));
+          } finally {
+            setState(() => _loading = false);
+          }
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Creează cont")),
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Form(
             key: _formKey,
-            child: ListView(
-              shrinkWrap: true,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  "Înregistrează-te",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                const Icon(
+                  Icons.person_add_alt_1,
+                  size: 64,
+                  color: Colors.blueGrey,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  "Creează cont în Vezi",
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Completează datele sau folosește Google",
+                  style: theme.textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
+
                 TextFormField(
                   controller: _emailCtrl,
-                  decoration: const InputDecoration(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
                     labelText: "Email",
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    prefixIcon: const Icon(Icons.email_outlined),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty)
@@ -72,12 +134,16 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                 ),
                 const SizedBox(height: 16),
+
                 TextFormField(
                   controller: _passwordCtrl,
                   obscureText: true,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: "Parolă",
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    prefixIcon: const Icon(Icons.lock_outline),
                   ),
                   validator: (value) {
                     if (value == null || value.length < 6)
@@ -86,12 +152,16 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                 ),
                 const SizedBox(height: 16),
+
                 TextFormField(
                   controller: _confirmCtrl,
                   obscureText: true,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: "Confirmă parola",
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    prefixIcon: const Icon(Icons.lock_reset_outlined),
                   ),
                   validator: (value) {
                     if (value != _passwordCtrl.text)
@@ -99,17 +169,35 @@ class _RegisterPageState extends State<RegisterPage> {
                     return null;
                   },
                 ),
+
                 const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.person_add),
                     onPressed: _loading ? null : _register,
-                    child: _loading
-                        ? const CircularProgressIndicator()
+                    label: _loading
+                        ? const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
                         : const Text("Creează cont"),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
                   ),
                 ),
+
                 const SizedBox(height: 12),
+                _outlinedGoogleButton(),
+
+                const SizedBox(height: 16),
                 TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Text("Ai deja cont? Autentifică-te"),

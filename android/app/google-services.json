@@ -12,7 +12,20 @@
           "package_name": "com.example.vezi"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "309128907993-m3jopr8qel6rar6l7iaqlu4080k498dt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vezi",
+            "certificate_hash": "15d9ebe870a473dbd50cbda9a0e2dd0e59cbb14c"
+          }
+        },
+        {
+          "client_id": "309128907993-rdkt6vjur8gss4spldcbcqokhghkccd8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBRZeIgt9VN80tvx5zhlcWOGiMPp16CIck"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "309128907993-rdkt6vjur8gss4spldcbcqokhghkccd8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
