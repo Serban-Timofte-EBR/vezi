@@ -78,10 +78,34 @@ class _LoginPageState extends State<LoginPage> {
                       : () async {
                           setState(() => _isLoading = true);
                           try {
-                            await _auth.signIn(
+                            final user = await _auth.signIn(
                               _emailCtrl.text.trim(),
                               _passwordCtrl.text.trim(),
                             );
+                            if (user != null && mounted) {
+                              final isVerified = await _auth.isUserVerified(
+                                user.uid,
+                              );
+                              if (isVerified == true) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const LauncherPage(),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Contul tău nu a fost încă verificat.\nTe rugăm să introduci codurile primite pe email și SMS.',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    backgroundColor: Colors.orange,
+                                    duration: Duration(seconds: 4),
+                                  ),
+                                );
+                              }
+                            }
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Eroare: $e')),

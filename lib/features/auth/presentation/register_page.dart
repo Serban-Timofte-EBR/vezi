@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vezi/features/auth/services/auth_service.dart';
 import 'package:vezi/features/launcher/presentation/launcher_page.dart';
+import 'package:vezi/features/auth/presentation/verify_code_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -11,6 +12,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _emailCtrl = TextEditingController();
+  final _phoneCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   final _confirmCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -23,12 +25,17 @@ class _RegisterPageState extends State<RegisterPage> {
 
     setState(() => _loading = true);
     try {
-      await _auth.register(_emailCtrl.text.trim(), _passwordCtrl.text.trim());
+      final phoneNumber = '+40${_phoneCtrl.text.trim()}';
+      final user = await _auth.register(
+        _emailCtrl.text.trim(),
+        _passwordCtrl.text.trim(),
+        phoneNumber,
+      );
 
-      if (mounted) {
+      if (user != null && mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const LauncherPage()),
+          MaterialPageRoute(builder: (_) => VerifyCodePage(uid: user.uid)),
         );
       }
     } catch (e) {
@@ -134,6 +141,37 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 16),
 
+                TextFormField(
+                  controller: _phoneCtrl,
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(
+                    labelText: "Număr de telefon",
+                    hintText: "712345678",
+                    prefixText: "+40 ",
+                    prefixStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    prefixIcon: Icon(Icons.phone),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Numărul de telefon este obligatoriu";
+                    }
+                    if (!RegExp(r'^[7-9][0-9]{8}$').hasMatch(value)) {
+                      return "Introduceți un număr valid fără prefix (+40)";
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    final fullPhone = '+40${value?.trim()}';
+                    // Salvează `fullPhone` într-o variabilă de stare sau direct în modelul de utilizator
+                  },
+                ),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: _passwordCtrl,
                   obscureText: true,
