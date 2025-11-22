@@ -30,7 +30,7 @@ class _UserReportsPageState extends State<UserReportsPage> {
         'Basic ${base64Encode(utf8.encode('$username:$password'))}';
 
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:3000/reports/all-by-user'),
+      Uri.parse('https://api.openfocsani.eu/reports/all-by-user'),
       headers: {'Authorization': basicAuth, 'Content-Type': 'application/json'},
       body: jsonEncode({'userEmail': user.email}),
     );

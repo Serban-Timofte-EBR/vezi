@@ -6,12 +6,20 @@ import '../../domain/entities/category.dart';
 final categoryListProvider = FutureProvider<List<Category>>((ref) async {
   try {
     print(
-      '🔍 Attempting to fetch categories from: http://10.0.2.2:3000/category',
+      '🔍 Attempting to fetch categories from: https://api.openfocsani.eu/category',
     );
+    const username = 'veziAdmin';
+    const password = 'Mareparolagrea1234!';
+    final basicAuth =
+        'Basic ${base64Encode(utf8.encode('$username:$password'))}';
+
     final response = await http
         .get(
-          Uri.parse('http://10.0.2.2:3000/category'),
-          headers: {'Content-Type': 'application/json'},
+          Uri.parse('https://api.openfocsani.eu/category'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': basicAuth,
+          },
         )
         .timeout(const Duration(seconds: 10));
 

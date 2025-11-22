@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vezi/features/auth/services/auth_service.dart';
+import 'package:vezi/features/auth/presentation/login_page.dart';
 import 'package:vezi/features/submit_report/presentation/pages/report_form_page.dart';
 import 'package:vezi/features/submit_report/presentation/pages/user_reports_page.dart';
 
@@ -9,6 +11,7 @@ class LauncherPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userEmail = FirebaseAuth.instance.currentUser?.email ?? "Utilizator";
+    final auth = AuthService();
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -64,7 +67,15 @@ class LauncherPage extends StatelessWidget {
                       label: "Logout",
                       color: Colors.grey,
                       onTap: () async {
-                        await FirebaseAuth.instance.signOut();
+                        await auth.signOut();
+
+                        if (!context.mounted) return;
+
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (_) => const LoginPage()),
+                          (route) => false,
+                        );
                       },
                     ),
                   ],

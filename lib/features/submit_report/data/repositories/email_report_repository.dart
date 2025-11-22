@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class EmailReportRepository implements IReportRepository {
   @override
   Future<void> submitReport(Report report) async {
-    final url = Uri.parse('http://10.0.2.2:3000/reports');
+    final url = Uri.parse('https://api.openfocsani.eu/reports');
 
     const username = 'veziAdmin';
     const password = 'Mareparolagrea1234!';

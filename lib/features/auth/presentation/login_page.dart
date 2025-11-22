@@ -108,7 +108,10 @@ class _LoginPageState extends State<LoginPage> {
                             }
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Eroare: $e')),
+                              SnackBar(
+                                content: Text(e.toString()),
+                                backgroundColor: Colors.red,
+                              ),
                             );
                           } finally {
                             setState(() => _isLoading = false);
