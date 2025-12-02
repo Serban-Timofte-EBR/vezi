@@ -1,7 +1,38 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- The INTERNET permission is required for development. Specifically,
-         the Flutter tool needs it to communicate with the running application
-         to allow setting breakpoints, to provide hot reload, etc.
-    -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="eu.openfocsani.vezi">
+
+    <!-- Necesare pentru funcționalitatea aplicației -->
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Foto & Galerie -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- pentru device-uri mai vechi (Android < 13) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <!-- Cameră (dacă vei adăuga folosirea camerei direct) -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Locație -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <!-- Only while app is in use – IMPORTANT pentru Play Store -->
+    <uses-feature 
+        android:name="android.hardware.location.gps"
+        android:required="false"/>
+
+    <!-- Necesare pentru Google Maps -->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+
+    <application
+        android:label="Civic Alert Focșani"
+        android:icon="@mipmap/ic_launcher">
+
+        <!-- Cheie Google Maps (dacă e în manifest) -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}"/>
+
+    </application>
+
 </manifest>
