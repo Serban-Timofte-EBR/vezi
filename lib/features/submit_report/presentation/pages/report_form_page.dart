@@ -67,17 +67,15 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
     });
   }
 
-  Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-    );
+  Future<void> _addImage(ImageSource source) async {
+    if (_selectedImages.length >= 3) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Poți adăuga maxim 3 poze!')),
+      );
+      return;
+    }
+    final pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile != null) {
-      if (_selectedImages.length >= 3) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Poți adăuga maxim 3 poze!')),
-        );
-        return;
-      }
       setState(() {
         _selectedImages.add(File(pickedFile.path));
       });
@@ -222,10 +220,24 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
                     : const Center(child: CircularProgressIndicator()),
               ),
               const SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: _pickImage,
-                icon: const Icon(Icons.image),
-                label: const Text('Adaugă poză'),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _addImage(ImageSource.gallery),
+                      icon: const Icon(Icons.photo_library),
+                      label: const Text('Galerie'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _addImage(ImageSource.camera),
+                      icon: const Icon(Icons.camera_alt),
+                      label: const Text('Cameră'),
+                    ),
+                  ),
+                ],
               ),
               if (_selectedImages.isNotEmpty) ...[
                 const SizedBox(height: 12),
