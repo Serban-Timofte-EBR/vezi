@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/foundation.dart' show Factory;
 import 'package:flutter/gestures.dart';
+import 'package:vezi/core/widgets/image_grid.dart';
 
 class ReportFormPage extends ConsumerStatefulWidget {
   const ReportFormPage({super.key});
@@ -228,22 +229,13 @@ class _ReportFormPageState extends ConsumerState<ReportFormPage> {
               ),
               if (_selectedImages.isNotEmpty) ...[
                 const SizedBox(height: 12),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: _selectedImages
-                      .map(
-                        (file) => ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.file(
-                            file,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      )
-                      .toList(),
+                ImageGrid(
+                  images: _selectedImages,
+                  onRemove: (index) {
+                    setState(() {
+                      _selectedImages.removeAt(index);
+                    });
+                  },
                 ),
               ],
               const SizedBox(height: 24),

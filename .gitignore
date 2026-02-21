@@ -6,7 +6,7 @@
 *.swp
 .buildlog/
 .history
-
+android/key.properties
 
 
 # Flutter repo-specific

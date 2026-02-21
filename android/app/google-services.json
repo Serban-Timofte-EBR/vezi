@@ -7,18 +7,26 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:309128907993:android:3d87d3fa4c773f98c282c8",
+        "mobilesdk_app_id": "1:309128907993:android:88ae27631d5b6be0c282c8",
         "android_client_info": {
-          "package_name": "com.example.vezi"
+          "package_name": "ro.openfocsani.vezi"
         }
       },
       "oauth_client": [
         {
-          "client_id": "309128907993-m3jopr8qel6rar6l7iaqlu4080k498dt.apps.googleusercontent.com",
+          "client_id": "309128907993-7q1fvfrb336tkf1t8hia7ofer4r0scq8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.vezi",
+            "package_name": "ro.openfocsani.vezi",
             "certificate_hash": "15d9ebe870a473dbd50cbda9a0e2dd0e59cbb14c"
+          }
+        },
+        {
+          "client_id": "309128907993-uq8om8j86jteocv20491errftml570o3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ro.openfocsani.vezi",
+            "certificate_hash": "1407f049b17efdebfb836b160a6dc93c92d0ca3d"
           }
         },
         {

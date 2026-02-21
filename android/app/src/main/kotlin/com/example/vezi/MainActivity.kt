@@ -1,4 +1,4 @@
-package com.example.vezi
+package ro.openfocsani.vezi
 
 import io.flutter.embedding.android.FlutterActivity
 

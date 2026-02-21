@@ -11,6 +11,7 @@ class ImageGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: images.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
@@ -31,7 +32,7 @@ class ImageGrid extends StatelessWidget {
               right: 4,
               child: GestureDetector(
                 onTap: () => onRemove(index),
-                child: const Icon(Icons.cancel, color: Colors.red),
+                child: const Icon(Icons.cancel, color: Colors.black),
               ),
             ),
           ],
